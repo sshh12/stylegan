@@ -348,7 +348,7 @@ def G_style(
     if dlatent_avg_beta is not None:
         with tf.variable_scope('DlatentAvg'):
             batch_avg = tf.reduce_mean(dlatents[:, 0], axis=0)
-            update_op = tf.assign(dlatent_avg, tflib.lerp(batch_avg, dlatent_avg, dlatent_avg_beta))
+            update_op = tf.compat.v1.assign(dlatent_avg, tflib.lerp(batch_avg, dlatent_avg, dlatent_avg_beta))
             with tf.control_dependencies([update_op]):
                 dlatents = tf.identity(dlatents)
 
@@ -374,7 +374,7 @@ def G_style(
             dlatents = tflib.lerp(dlatent_avg, dlatents, coefs)
 
     # Evaluate synthesis network.
-    with tf.control_dependencies([tf.assign(components.synthesis.find_var('lod'), lod_in)]):
+    with tf.control_dependencies([tf.compat.v1.assign(components.synthesis.find_var('lod'), lod_in)]):
         images_out = components.synthesis.get_output_for(dlatents, force_clean_graph=is_template_graph, **kwargs)
     return tf.identity(images_out, name='images_out')
 

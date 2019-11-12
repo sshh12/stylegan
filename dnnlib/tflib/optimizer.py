@@ -51,7 +51,7 @@ class Optimizer:
         self.name = name
         self.learning_rate = tf.convert_to_tensor(learning_rate)
         self.id = self.name.replace("/", ".")
-        self.scope = tf.get_default_graph().unique_name(self.id)
+        self.scope = tf.compat.v1.get_default_graph().unique_name(self.id)
         self.optimizer_class = util.get_obj_by_name(tf_optimizer)
         self.optimizer_kwargs = dict(kwargs)
         self.use_loss_scaling = use_loss_scaling
@@ -161,8 +161,8 @@ class Optimizer:
                             ops.append(tf.cond(grad_ok, lambda: opt.apply_gradients(grads), tf.no_op))
                         else:
                             ops.append(tf.cond(grad_ok,
-                                               lambda: tf.group(tf.assign_add(ls_var, self.loss_scaling_inc), opt.apply_gradients(grads)),
-                                               lambda: tf.group(tf.assign_sub(ls_var, self.loss_scaling_dec))))
+                                               lambda: tf.group(tf.compat.v1.assign_add(ls_var, self.loss_scaling_inc), opt.apply_gradients(grads)),
+                                               lambda: tf.group(tf.compat.v1.assign_sub(ls_var, self.loss_scaling_dec))))
 
                     # Report statistics on the last device.
                     if dev == devices[-1]:
