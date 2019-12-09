@@ -84,10 +84,10 @@ def _downscale2d(x, factor=2, gain=1):
     if factor == 1:
         return x
 
-    # Large factor => downscale using tf.nn.avg_pool().
+    # Large factor => downscale using tf.nn.avg_pool2d().
     # NOTE: Requires tf_config['graph_options.place_pruned_graph']=True to work.
     ksize = [1, 1, factor, factor]
-    return tf.nn.avg_pool(x, ksize=ksize, strides=ksize, padding='VALID', data_format='NCHW')
+    return tf.nn.avg_pool2d(x, ksize=ksize, strides=ksize, padding='VALID', data_format='NCHW')
 
 #----------------------------------------------------------------------------
 # High-level ops for manipulating 4D activation tensors.

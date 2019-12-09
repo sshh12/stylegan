@@ -104,7 +104,7 @@ def downscale2d(x, factor=2):
     if factor == 1: return x
     with tf.variable_scope('Downscale2D'):
         ksize = [1, 1, factor, factor]
-        return tf.nn.avg_pool(x, ksize=ksize, strides=ksize, padding='VALID', data_format='NCHW') # NOTE: requires tf_config['graph_options.place_pruned_graph'] = True
+        return tf.nn.avg_pool2d(x, ksize=ksize, strides=ksize, padding='VALID', data_format='NCHW') # NOTE: requires tf_config['graph_options.place_pruned_graph'] = True
 
 #----------------------------------------------------------------------------
 # Fused conv2d + downscale2d.

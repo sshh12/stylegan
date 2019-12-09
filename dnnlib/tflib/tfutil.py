@@ -231,7 +231,7 @@ def convert_images_to_uint8(images, drange=[-1,1], nchw_to_nhwc=False, shrink=1)
     images = tf.cast(images, tf.float32)
     if shrink > 1:
         ksize = [1, 1, shrink, shrink]
-        images = tf.nn.avg_pool(images, ksize=ksize, strides=ksize, padding="VALID", data_format="NCHW")
+        images = tf.nn.avg_pool2d(images, ksize=ksize, strides=ksize, padding="VALID", data_format="NCHW")
     if nchw_to_nhwc:
         images = tf.transpose(images, [0, 2, 3, 1])
     scale = 255 / (drange[1] - drange[0])

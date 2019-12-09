@@ -27,7 +27,7 @@ except:
     import tensorflow.contrib.nccl as nccl_ops
 
 class Optimizer:
-    """A Wrapper for tf.train.Optimizer.
+    """A Wrapper for tf.compat.v1.train.Optimizer.
 
     Automatically takes care of:
     - Gradient averaging for multi-GPU training.
@@ -39,7 +39,7 @@ class Optimizer:
 
     def __init__(self,
                  name: str = "Train",
-                 tf_optimizer: str = "tf.train.AdamOptimizer",
+                 tf_optimizer: str = "tf.compat.v1.train.AdamOptimizer",
                  learning_rate: TfExpressionEx = 0.001,
                  use_loss_scaling: bool = False,
                  loss_scaling_init: float = 64.0,
@@ -95,7 +95,7 @@ class Optimizer:
                 self._dev_grads[dev] = []
 
             loss = self.apply_loss_scaling(tf.cast(loss, tf.float32))
-            grads = self._dev_opt[dev].compute_gradients(loss, trainable_vars, gate_gradients=tf.train.Optimizer.GATE_NONE)  # disable gating to reduce memory usage
+            grads = self._dev_opt[dev].compute_gradients(loss, trainable_vars, gate_gradients=tf.compat.v1.train.Optimizer.GATE_NONE)  # disable gating to reduce memory usage
             grads = [(g, v) if g is not None else (tf.zeros_like(v), v) for g, v in grads]  # replace disconnected gradients with zeros
             self._dev_grads[dev].append(grads)
 
